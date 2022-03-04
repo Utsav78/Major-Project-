@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     TextView result, confidence;
     ImageView imageView;
     Button picture;
-    int imageSize = 224;
+    int imageSize = 64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             Model model = Model.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 64, 64, 3}, DataType.FLOAT32);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
             byteBuffer.order(ByteOrder.nativeOrder());
 
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < imageSize; i ++){
                 for(int j = 0; j < imageSize; j++){
                     int val = intValues[pixel++]; // RGB
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 255));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 255));
-                    byteBuffer.putFloat((val & 0xFF) * (1.f / 255));
+                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f));
+                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f ));
+                    byteBuffer.putFloat((val & 0xFF) * (1.f));
                 }
             }
 
@@ -101,21 +101,12 @@ public class MainActivity extends AppCompatActivity {
                     maxPos = i;
                 }
             }
-            String[] classes = {"Chrysanthemum",
-                    "Daffodil",
-                    "Dahlia",
-                    "Daisy",
-                    "FrangipaniFlower",
-                    "Hibiscus",
-                    "Jasmine",
-                    "Marigold",
-                    "Orchid",
-                    "Periwinkle",
-                    "Poinsettia",
-                    "rhododendron",
-                    "Roses",
-                    "Snapdragon",
-                    "Sunflower"};
+            String[] classes = {"Bansuri",
+                    "Damaha",
+                    "Damaru",
+                    "Madal",
+                    "Murchuga",
+                    "Sarangi"};
             result.setText(classes[maxPos]);
 
             String s = "";
@@ -146,6 +137,5 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 }

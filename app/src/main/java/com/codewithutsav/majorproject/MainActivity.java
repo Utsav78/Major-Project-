@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     TextView result, confidence;
     ImageView imageView;
     Button picture;
-    int imageSize = 64;
+    int imageSize = 224;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             Model model = Model.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 64, 64, 3}, DataType.FLOAT32);
+            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
             byteBuffer.order(ByteOrder.nativeOrder());
 
@@ -79,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < imageSize; i ++){
                 for(int j = 0; j < imageSize; j++){
                     int val = intValues[pixel++]; // RGB
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f ));
-                    byteBuffer.putFloat((val & 0xFF) * (1.f));
+                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f/255));
+                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f/255 ));
+                    byteBuffer.putFloat((val & 0xFF) * (1.f/255));
                 }
             }
 
@@ -92,9 +93,11 @@ public class MainActivity extends AppCompatActivity {
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             float[] confidences = outputFeature0.getFloatArray();
+            Log.d(TAG, "classifyImage: "+confidences[0]+" "+confidences[1]+" "+confidences[2]+" "+confidences[4]+" "
+                    +confidences[5]);
             // find the index of the class with the biggest confidence.
             int maxPos = 0;
-            float maxConfidence = 0;
+            float maxConfidence = confidences[0];
             for(int i = 0; i < confidences.length; i++){
                 if(confidences[i] > maxConfidence){
                     maxConfidence = confidences[i];
@@ -107,7 +110,14 @@ public class MainActivity extends AppCompatActivity {
                     "Madal",
                     "Murchuga",
                     "Sarangi"};
-            result.setText(classes[maxPos]);
+
+            if (maxConfidence < -1){
+                result.setText("Not identified. Try Again !!");
+            }else{
+                result.setText(classes[maxPos]);
+
+
+            }
 
             String s = "";
             for(int i = 0; i < classes.length; i++){
@@ -138,4 +148,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void openInformation(View view) {
+        startActivity(new Intent(this,InformationActivity.class));
+    }
 }

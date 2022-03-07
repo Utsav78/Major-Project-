@@ -7,16 +7,15 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:id="@+id/button"
         android:text="Take Picture"
         android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
         android:textSize="21sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
     <ImageView
         android:layout_width="370sp"
         android:layout_height="370sp"
@@ -46,17 +45,18 @@
         android:id="@+id/result"
         android:layout_below="@+id/classified"
         />
+
     <TextView
+        android:id="@+id/confidencesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/confidencesText"
-        android:text="Confidences:"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/result"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="30sp"
-        />
+        android:text="Confidences:"
+        android:onClick="openInformation"
+        android:textSize="20sp"
+        android:textStyle="bold" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

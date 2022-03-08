@@ -105,11 +105,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             String[] classes = {"Bansuri",
+                    "Dafali",
                     "Damaha",
                     "Damaru",
+                    "Damphu",
+                    "Dhimay",
+                    "Dholak",
+                    "Dhyangro",
+                    "Ektare",
+                    "Jhyamta",
+                    "Kangling",
                     "Madal",
                     "Murchuga",
-                    "Sarangi"};
+                    "Narsingha",
+                    "Pungi",
+                    "Sanai",
+                    "Sankha",
+                    "Sarangi",
+                    "Tabla",
+                    "Tunga",
+                    "Tymako"};
 
             if (maxConfidence < -1){
                 result.setText("Not identified. Try Again !!");

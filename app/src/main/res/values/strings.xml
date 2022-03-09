@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MajorProject</string>
+    <string name="name_of_name">Folk Musical Instrument Detection</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="classified_as">Classified as:</string>
 </resources>

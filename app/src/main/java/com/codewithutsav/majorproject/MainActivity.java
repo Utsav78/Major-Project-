@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView result;
     ImageView imageView;
+    TextView classified;
     Button picture;
     int imageSize = 224;
     Button viewDetails;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         picture = findViewById(R.id.button);
         viewDetails = findViewById(R.id.view_details);
+        classified = findViewById(R.id.classified);
 
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void classifyImage(Bitmap image){
+        classified.setVisibility(View.VISIBLE);
         try {
             Model model = Model.newInstance(getApplicationContext());
 
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     "Jhyamta",
                     "Kangling",
                     "Madal",
-                    "Murchuga",
+                    "Murchunga",
                     "Narsingha",
                     "Pungi",
                     "Sanai",

@@ -26,9 +26,12 @@ import com.codewithutsav.majorproject.ml.Model;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         result = findViewById(R.id.result);
-        confidence = findViewById(R.id.confidence);
+        //confidence = findViewById(R.id.confidence);
         imageView = findViewById(R.id.imageView);
         picture = findViewById(R.id.button);
 
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             float[] confidences = outputFeature0.getFloatArray();
+
             Log.d(TAG, "classifyImage: "+confidences[0]+" "+confidences[1]+" "+confidences[2]+" "+confidences[4]+" "
                     +confidences[5]);
             // find the index of the class with the biggest confidence.
@@ -134,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            String s = "";
-            for(int i = 0; i < classes.length; i++){
-                s += String.format("%s: %.1f%%\n", classes[i], confidences[i] * 100);
-            }
-            confidence.setText(s);
+//            String s = "";
+//            for(int i = 0; i < classes.length; i++){
+//                s += String.format("%s: %.1f%%\n", classes[i], confidences[i] * 100);
+//            }
+//            confidence.setText(s);
 
 
             // Releases model resources if no longer used.
@@ -160,10 +164,32 @@ public class MainActivity extends AppCompatActivity {
             image = Bitmap.createScaledBitmap(image, imageSize, imageSize, true);
             classifyImage(image);
         }
+        else if (requestCode == 2 && resultCode == RESULT_OK){
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                int dimension = Math.min(bitmap.getWidth(), bitmap.getHeight());
+
+                bitmap = ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
+                imageView.setImageBitmap(bitmap);
+
+                bitmap = Bitmap.createScaledBitmap(bitmap, imageSize, imageSize, true);
+                classifyImage(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void openInformation(View view) {
         startActivity(new Intent(this,InformationActivity.class));
+    }
+
+    public void openGallery(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent,"Pick the image"),2);
+
     }
 }

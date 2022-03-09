@@ -4,14 +4,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codewithutsav.majorproject.ml.Model;
 
@@ -31,14 +27,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView result, confidence;
+    TextView result;
     ImageView imageView;
     Button picture;
     int imageSize = 224;
+    Button viewDetails;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -50,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //confidence = findViewById(R.id.confidence);
         imageView = findViewById(R.id.imageView);
         picture = findViewById(R.id.button);
+        viewDetails = findViewById(R.id.view_details);
 
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     "Dhimay",
                     "Dholak",
                     "Dhyangro",
-                    "Ektare",
+                    "EkTare",
                     "Jhyamta",
                     "Kangling",
                     "Madal",
@@ -132,8 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (maxConfidence < -1){
                 result.setText("Not identified. Try Again !!");
+                viewDetails.setVisibility(View.GONE);
             }else{
                 result.setText(classes[maxPos]);
+                viewDetails.setVisibility(View.VISIBLE);
 
 
             }
@@ -182,14 +181,17 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void openInformation(View view) {
-        startActivity(new Intent(this,InformationActivity.class));
-    }
 
     public void openGallery(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent,"Pick the image"),2);
 
+    }
+
+    public void viewDetails(View view) {
+        Intent intent = new Intent(MainActivity.this, InformationActivity.class);
+        intent.putExtra("instrumentName",result.getText().toString()+".md");
+        startActivity(intent);
     }
 }
